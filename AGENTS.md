@@ -81,4 +81,4 @@ See `agents/TESTING.md` for more
 - Generated Hamming assets are reproducible visual regressions. Regenerate
   them with `just docs-assets` whenever their data tables or plot specs change.
 - Treat `output/` as entirely disposable local workspace. Never commit files
-  from it; curated documentation regressions belong under `assets/`.
+  from it; curated documentation assets are written under `docs/` by `just docs-assets`.
