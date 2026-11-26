@@ -1,6 +1,7 @@
 # Topographer
 
 [![Licence: MIT](https://img.shields.io/badge/licence-MIT-blue)](https://github.com/oist/topographer/blob/main/LICENSE.md)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24548494.svg)](https://doi.org/10.5281/zenodo.24548494)
 
 Topographer builds merge trees for a graph that carries a scalar on each vertex. It is the software described in the accompanying methods paper: validate a scalar network, construct the join tree and the split tree, read off persistence, and simplify the tree with a bootstrap persistence band.
 
@@ -57,7 +58,7 @@ Dubanevics et al. "Topological characterization of combinatorial fitness landsca
 
 ## Cite
 
-Cite version 0.5.1 with the metadata in [`CITATION.cff`](https://github.com/oist/topographer/blob/main/CITATION.cff). The Zenodo DOI for this release, and the methods paper, will be added there when they exist.
+Cite the software with the metadata in [`CITATION.cff`](https://github.com/oist/topographer/blob/main/CITATION.cff). The Zenodo concept DOI, [10.5281/zenodo.24548494](https://doi.org/10.5281/zenodo.24548494), cites all versions and always resolves to the latest. The version DOI, [10.5281/zenodo.24548495](https://doi.org/10.5281/zenodo.24548495), cites version 0.5.1 specifically. `CITATION.cff` has the machine-readable form. The methods paper will be added when it exists.
 
 ## Development
 

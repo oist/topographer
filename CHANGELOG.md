@@ -5,6 +5,12 @@ All notable changes to this public package are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Zenodo DOI badge and concept DOI in README and CITATION.cff.
+
 ## [0.5.1] - 2026-11-26
 
 Release metadata only. No change to the package's behaviour.
@@ -36,5 +42,6 @@ First public release. Versions before 0.5.0 were developed privately and are not
 - Development status is Beta. The supported runtimes are Python 3.11, 3.12 and 3.13 on Linux, macOS and Windows.
 - The public API is the merge-tree workflow: scalar networks, join and split trees, component persistence, simplification, diagram distances, fitness landscapes and sequence annotation.
 
+[Unreleased]: https://github.com/oist/topographer/compare/v0.5.1...HEAD
 [0.5.1]: https://github.com/oist/topographer/releases/tag/v0.5.1
 [0.5.0]: https://github.com/oist/topographer/releases/tag/v0.5.0

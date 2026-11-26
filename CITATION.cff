@@ -1,9 +1,14 @@
 cff-version: 1.2.0
-message: "If you use Topographer in academic work, please cite this software."
+message: "If you use Topographer in academic work, please cite this software via its Zenodo DOI."
 type: software
 title: "Topographer"
 version: "0.5.1"
 date-released: 2026-11-26
+doi: 10.5281/zenodo.24548494
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.24548494
+    description: "Zenodo concept DOI, all versions"
 license: MIT
 repository-code: "https://github.com/oist/topographer"
 url: "https://github.com/oist/topographer"
