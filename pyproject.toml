@@ -1,6 +1,6 @@
 [project]
 name = "topographer"
-version = "0.5.0"
+version = "0.5.1"
 description = "Merge trees and persistence for scalar networks."
 authors = [
   { name = "Igors Dubanevics" },

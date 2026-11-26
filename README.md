@@ -57,7 +57,7 @@ Dubanevics et al. "Topological characterization of combinatorial fitness landsca
 
 ## Cite
 
-Cite version 0.5.0 with the metadata in [`CITATION.cff`](https://github.com/oist/topographer/blob/main/CITATION.cff). The Zenodo DOI for this release, and the methods paper, will be added there when they exist.
+Cite version 0.5.1 with the metadata in [`CITATION.cff`](https://github.com/oist/topographer/blob/main/CITATION.cff). The Zenodo DOI for this release, and the methods paper, will be added there when they exist.
 
 ## Development
 

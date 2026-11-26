@@ -3,7 +3,7 @@
   "description": "Merge trees and persistence for scalar networks.",
   "upload_type": "software",
   "license": "MIT",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "keywords": [
     "graph",
     "network",
@@ -13,8 +13,18 @@
   "creators": [
     {
       "name": "Dubanevics, Igors",
-      "affiliation": "Okinawa Institute of Science and Technology (OIST)",
+      "affiliation": "Okinawa Institute of Science and Technology Graduate University",
       "orcid": "0000-0002-9989-6649"
+    }
+  ],
+  "access_right": "open",
+  "language": "eng",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/oist/topographer",
+      "relation": "isIdenticalTo",
+      "resource_type": "software",
+      "scheme": "url"
     }
   ]
 }
