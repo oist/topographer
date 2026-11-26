@@ -53,7 +53,7 @@ See `agents/PACKAGE.md` for more
 
 - Start each task from a clean worktree on `main`.
 - Run `git pull --ff-only origin main` before creating a task branch.
-- Create a dedicated `codex/...` branch and never implement changes directly on
+- Create a dedicated feature branch and never implement changes directly on
   `main`.
 - Commit completed changes as a logical sequence so each verified step remains
   independently trackable.
