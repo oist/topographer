@@ -1,0 +1,26 @@
+name: Bug report
+description: Report a defect in topographer
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you ran, what you expected, and what you got.
+    validations:
+      required: true
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions
+      description: Python version, operating system, and topographer version (`topographer.__version__`).
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal example
+      description: A short script that shows the bug. Use a small synthetic graph.
+    validations:
+      required: true

@@ -1,0 +1,5 @@
+birth_tree_node_index,death_tree_node_index,birth_vertex_index,death_vertex_index,birth_label,death_label,birth_scalar,death_scalar,persistence,birth_event,death_event,pair_kind
+0,7,14,0,1110,0000,0.9411764705882353,0.058823529411764705,0.8823529411764706,maximum,regular,extended
+4,6,7,15,0111,1111,0.75,0.47058823529411764,0.27941176470588236,maximum,split_saddle,ordinary
+1,2,13,12,1101,1100,0.8823529411764706,0.8235294117647058,0.05882352941176472,maximum,split_saddle,ordinary
+3,5,11,10,1011,1010,0.7647058823529411,0.7058823529411765,0.05882352941176461,maximum,split_saddle,ordinary

@@ -1,0 +1,29 @@
+name: Publish to PyPI
+
+# Not enabled. The PyPI project name "topographer" belongs to another project.
+# After that name is transferred, delete the `if: false` below and switch the
+# trigger to a published GitHub release. Publishing uses GitHub trusted
+# publishing (the id-token permission); no PyPI token is stored.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: false
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - run: uv build
+      - run: uv publish

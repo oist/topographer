@@ -1,0 +1,46 @@
+---
+title: "Get started"
+---
+
+# Get started
+
+Topographer requires Python 3.11 or newer. Install it from GitHub:
+
+```bash
+pip install "topographer[plotting] @ git+https://github.com/oist/topographer.git"
+```
+
+With uv, use `uv add "topographer[plotting] @ git+https://github.com/oist/topographer.git"`.
+The `plotting` extra provides the dependencies for charts; omit it if you do
+not need plots. Contributors building the site can install the `docs` extra.
+
+## A small scalar network
+
+Give each vertex an ID and a scalar value, then construct a topology workspace.
+The join and split trees summarize sublevel and superlevel connectivity.
+
+```python
+import rustworkx as rx
+from topographer import Graph, ScalarNetwork, ScalarNetworkTopology
+from topographer.plotting import build_tree_plot_data, plot_tree
+
+backend = rx.PyGraph()
+backend.add_nodes_from([
+    {"id": "a", "height": 0.0},
+    {"id": "b", "height": 1.0},
+    {"id": "c", "height": 0.3},
+])
+backend.add_edges_from([(0, 1, None), (1, 2, None)])
+graph = Graph.from_rustworkx(backend, vertex_id_attr="id", vertex_attribute_cols=("height",))
+network = ScalarNetwork(graph, scalar_attr="height")
+topology = ScalarNetworkTopology(network)
+join_tree = topology.compute_merge_tree("sublevel")
+split_tree = topology.compute_merge_tree("superlevel")
+pairs = join_tree.persistence()
+diagram = topology.persistence_diagram("sublevel")
+simplified = join_tree.simplify(persistence_threshold=0.2)
+chart = plot_tree(build_tree_plot_data(simplified, root_kind="maximum"))
+```
+
+Display `chart` in a notebook to explore the result. See the [Gallery](../gallery/index.qmd)
+for complete examples and the [User guide](../guide/index.qmd) for more workflows.

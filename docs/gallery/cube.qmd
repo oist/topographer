@@ -1,0 +1,157 @@
+---
+title: "Cube"
+description: "An eight-vertex graph with normalized scalar function, component persistence, and dual merge trees."
+image: "figures/cube/cube_scalar_network.svg"
+order: 1
+---
+
+# Cube
+
+The eight vertices of a 3-dimensional cube are endowed with a normalized scalar function $\mathrm{height} \in [0, 1]$.
+This benchmark provides a compact, deterministic setting with two local minima and two local maxima to demonstrate
+the complete topological data analysis pipeline.
+
+## 1. Graph and ScalarNetwork Construction
+
+We begin by loading the raw vertex and edge tables. Graph structure is adapted through `Graph.from_rustworkx(...)`.
+We then declare the scalar function by wrapping it in a [`ScalarNetwork`](../../reference/ScalarNetwork.qmd), distinguishing unweighted network connectivity from the continuous measurement defined on top of it.
+
+```python
+from topographer.examples import cube_edge_table, cube_node_table
+from topographer.graph import Graph, ScalarNetwork
+
+# 8 vertices and 12 edges of the 3-cube
+graph = Graph.from_tables(
+    cube_node_table(),
+    cube_edge_table(),
+    vertex_id_col="node_id",
+    source_id_col="source",
+    target_id_col="target",
+    vertex_attribute_cols=("height",),
+)
+scalar_network = ScalarNetwork(graph, scalar_attr="height")
+```
+
+{{< tbl-preview file="docs/gallery/data/cube/cube_vertices.csv" >}}
+
+```{=html}
+<iframe src="interactive/cube/cube_scalar_network.html" width="100%" height="400" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/cube/cube_scalar_network.svg){.lightbox}
+:::
+
+### Network Summary
+
+{{< tbl-preview file="docs/gallery/data/cube/cube_summary.csv" >}}
+
+## 2. Component Persistence
+
+Using `ScalarNetworkTopology`, we compute extended component persistence, visualized in one diagram with the vertical sweep-plane convention ($Y = \text{birth}$, $X = \text{death}$):
+
+- **Sublevel components**: Rendered below the diagonal ($Y < X$) with downward triangles ($\triangledown$) pointing to local minima. Contains 1 ordinary pair (local minimum `100` dying at saddle `000`).
+- **Global component**: Rendered below the diagonal ($Y < X$) with a diamond ($\lozenge$) pointing to the global maximum (`001` to `011`, spanning the full scalar range $[0, 1]$).
+- **Relative components**: Rendered above the diagonal ($Y > X$) with upward triangles ($\vartriangle$) pointing to local maxima. Contains 1 relative pair (`110` to `111`). These pairs reflect superlevel component connectivity in descending continuation, rather than loops in the original graph.
+
+Each scalar network requires an explicitly declared vertex scalar attribute. An edge scalar may optionally be attached for domain workflows, but persistence evaluates topology solely against the chosen vertex scalar.
+
+```{=html}
+<iframe src="interactive/cube/cube_canonical_persistence.html" width="100%" height="420" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/cube/cube_canonical_persistence.svg){.lightbox}
+:::
+
+{{< tbl-preview file="docs/gallery/data/cube/cube_persistence.csv" >}}
+
+## 3. Join and Split Merge Trees
+
+Sublevel and superlevel component evolutions are summarized by dual merge trees computed via `compute_merge_tree("sublevel")` and `compute_merge_tree("superlevel")`. Both directions are given equal coverage:
+
+- **Augmented trees** retain all scalar network vertices with their exact scalar values and orthogonal branching geometry.
+- **Tree reduction** prunes non-critical pass-through vertices while preserving all branching events and critical extrema.
+- **Tree simplification** removes ordinary persistence pairs whose lifetime falls below a threshold $\tau = 0.10$.
+
+::: {.panel-tabset}
+### Join Tree (Sublevel Filtration)
+
+The join tree tracks the merger of connected components as the filtration threshold sweeps upward from the global minimum `001` ($0.0$).
+
+#### Reduced Join Tree
+```{=html}
+<iframe src="interactive/cube/cube_join_tree_reduced.html" width="100%" height="450" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/cube/cube_join_tree_reduced.svg){.lightbox}
+:::
+
+<details>
+<summary>View Augmented Join Tree (all 8 vertices retained)</summary>
+
+```{=html}
+<iframe src="interactive/cube/cube_join_tree_augmented.html" width="100%" height="450" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/cube/cube_join_tree_augmented.svg){.lightbox}
+:::
+
+</details>
+
+#### Join Tree Simplification (Threshold $\tau = 0.10$)
+
+At threshold $\tau = 0.10$, the ordinary persistence pair has persistence $0.40 > 0.10$, so no pairs qualify for removal. The simplified tree remains identical to the reduced tree:
+
+```{=html}
+<iframe src="interactive/cube/cube_join_tree_simplified.html" width="100%" height="450" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/cube/cube_join_tree_simplified.svg){.lightbox}
+:::
+
+{{< tbl-preview file="docs/gallery/data/cube/cube_join_qualifying.csv" >}}
+
+### Split Tree (Superlevel Filtration)
+
+The split tree tracks component history in the superlevel direction, sweeping downward from the global maximum `011` ($1.0$).
+
+#### Reduced Split Tree
+```{=html}
+<iframe src="interactive/cube/cube_split_tree_reduced.html" width="100%" height="450" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/cube/cube_split_tree_reduced.svg){.lightbox}
+:::
+
+<details>
+<summary>View Augmented Split Tree (all 8 vertices retained)</summary>
+
+```{=html}
+<iframe src="interactive/cube/cube_split_tree_augmented.html" width="100%" height="450" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/cube/cube_split_tree_augmented.svg){.lightbox}
+:::
+
+</details>
+
+#### Split Tree Simplification (Threshold $\tau = 0.10$)
+
+At threshold $\tau = 0.10$, the minor ordinary pair born at maximum `110` ($0.90$) and merging at split saddle `111` ($0.80$) has persistence $0.10 \le 0.10$. It qualifies for simplification and is pruned, reducing the split tree to its single dominant branch:
+
+```{=html}
+<iframe src="interactive/cube/cube_split_tree_simplified.html" width="100%" height="450" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/cube/cube_split_tree_simplified.svg){.lightbox}
+:::
+
+{{< tbl-preview file="docs/gallery/data/cube/cube_split_qualifying.csv" >}}
+:::
+
+## 4. Interactive Notebook
+
+The companion interactive notebook is located at `notebooks/cube.py` in the repository root. To explore real-time threshold adjustment with Marimo sliders, run it locally:
+
+```bash
+uv run --extra docs marimo edit notebooks/cube.py
+```

@@ -1,0 +1,149 @@
+---
+title: "Hypercube"
+description: "A 16-vertex, 4-dimensional Hamming graph with component persistence and dual merge-tree simplification."
+image: "figures/hypercube/hypercube_scalar_network.svg"
+order: 2
+---
+
+# Hypercube
+
+The 16 binary sequences of length 4 define the vertices of a 4-dimensional hypercube $\mathcal{H}(4, 2)$, connected
+by 32 Hamming-radius-one edges and endowed with a deterministic scalar function $\mathrm{scalar} \in [0.059, 0.941]$.
+
+## 1. Graph and ScalarNetwork Construction
+
+Adjacency is defined by biological single-mutation steps. We construct the graph using `HammingGraph` with `Alphabet("01")` at Hamming radius 1. The scalar function is declared explicitly by adapting the topology into a [`ScalarNetwork`](../../reference/ScalarNetwork.qmd).
+
+```python
+from topographer.biology import Alphabet
+from topographer.examples import hypercube_node_table
+from topographer.graph import HammingGraph, ScalarNetwork
+
+# 16 vertices and 32 edges of the 4-hypercube
+graph = HammingGraph(
+    hypercube_node_table(),
+    sequence_col="sequence",
+    alphabet=Alphabet("01"),
+    hamming_radius=1,
+    vertex_attribute_cols=("scalar",),
+)
+scalar_network = ScalarNetwork(graph, scalar_attr="scalar")
+```
+
+{{< tbl-preview file="docs/gallery/data/hypercube/hypercube_vertices.csv" >}}
+
+```{=html}
+<iframe src="interactive/hypercube/hypercube_scalar_network.html" width="100%" height="420" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/hypercube/hypercube_scalar_network.svg){.lightbox}
+:::
+
+### Network Summary
+
+{{< tbl-preview file="docs/gallery/data/hypercube/hypercube_summary.csv" >}}
+
+## 2. Component Persistence
+
+We construct `ScalarNetworkTopology` to compute extended component persistence, visualized in one diagram with the vertical sweep-plane convention ($Y = \text{birth}$, $X = \text{death}$):
+
+- **Sublevel components**: Rendered below the diagonal ($Y < X$) with downward triangles ($\triangledown$) pointing to local minima.
+- **Global component**: Rendered below the diagonal ($Y < X$) with a diamond ($\lozenge$) pointing to the global maximum.
+- **Relative components**: Rendered above the diagonal ($Y > X$) with upward triangles ($\vartriangle$) pointing to local maxima.
+
+```{=html}
+<iframe src="interactive/hypercube/hypercube_canonical_persistence.html" width="100%" height="420" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/hypercube/hypercube_canonical_persistence.svg){.lightbox}
+:::
+
+{{< tbl-preview file="docs/gallery/data/hypercube/hypercube_persistence.csv" >}}
+
+## 3. Join and Split Merge Trees
+
+We compute the sublevel join tree and superlevel split tree via `compute_merge_tree("sublevel")` and `compute_merge_tree("superlevel")`. Both trees are presented with augmented graphs, reduced representations, and threshold simplification:
+
+::: {.panel-tabset}
+### Join Tree (Sublevel Filtration)
+
+The join tree captures sublevel component mergers sweeping upward from local minima.
+
+#### Reduced Join Tree
+```{=html}
+<iframe src="interactive/hypercube/hypercube_join_tree_reduced.html" width="100%" height="450" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/hypercube/hypercube_join_tree_reduced.svg){.lightbox}
+:::
+
+<details>
+<summary>View Augmented Join Tree (all 16 vertices retained)</summary>
+
+```{=html}
+<iframe src="interactive/hypercube/hypercube_join_tree_augmented.html" width="100%" height="450" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/hypercube/hypercube_join_tree_augmented.svg){.lightbox}
+:::
+
+</details>
+
+#### Join Tree Simplification (Threshold $\tau = 0.09$)
+
+At threshold $\tau = 0.09$ (10% of scalar range), the ordinary persistence pair has persistence $0.279 > 0.09$, so no ordinary pairs qualify for pruning and the join tree remains intact:
+
+```{=html}
+<iframe src="interactive/hypercube/hypercube_join_tree_simplified.html" width="100%" height="450" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/hypercube/hypercube_join_tree_simplified.svg){.lightbox}
+:::
+
+{{< tbl-preview file="docs/gallery/data/hypercube/hypercube_join_qualifying.csv" >}}
+
+### Split Tree (Superlevel Filtration)
+
+The split tree captures superlevel component evolution descending from global and local maxima.
+
+#### Reduced Split Tree
+```{=html}
+<iframe src="interactive/hypercube/hypercube_split_tree_reduced.html" width="100%" height="450" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/hypercube/hypercube_split_tree_reduced.svg){.lightbox}
+:::
+
+<details>
+<summary>View Augmented Split Tree (all 16 vertices retained)</summary>
+
+```{=html}
+<iframe src="interactive/hypercube/hypercube_split_tree_augmented.html" width="100%" height="450" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/hypercube/hypercube_split_tree_augmented.svg){.lightbox}
+:::
+
+</details>
+
+#### Split Tree Simplification (Threshold $\tau = 0.09$)
+
+At threshold $\tau = 0.09$, two minor ordinary branches with persistence $0.0588 \le 0.09$ are pruned, simplifying the split tree from 8 nodes to 6:
+
+```{=html}
+<iframe src="interactive/hypercube/hypercube_split_tree_simplified.html" width="100%" height="450" style="border: 1px solid #e9ecef; border-radius: 4px;"></iframe>
+```
+::: {.text-end .small .text-muted}
+[Enlarge static SVG fallback](figures/hypercube/hypercube_split_tree_simplified.svg){.lightbox}
+:::
+
+{{< tbl-preview file="docs/gallery/data/hypercube/hypercube_split_qualifying.csv" >}}
+:::
+
+## 4. Interactive Notebook
+
+The companion interactive notebook is located at `notebooks/hypercube.py` in the repository root. To explore real-time threshold adjustment with Marimo sliders, run it locally:
+
+```bash
+uv run --extra docs marimo edit notebooks/hypercube.py
+```

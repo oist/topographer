@@ -1,0 +1,17 @@
+---
+title: "About"
+---
+
+# About Topographer
+
+Topographer is an open Python toolkit for topology-aware analysis of scalar
+networks. Version 0.5.0 is the first public release. Earlier versions were
+developed privately.
+
+For academic use, please cite **Igors Dubanevics, Topographer**, version
+0.5.0. A Zenodo DOI will be added to `CITATION.cff` when the public archive
+exists. The machine-readable citation is in
+[`CITATION.cff`](https://github.com/oist/topographer/blob/main/CITATION.cff).
+Topographer is distributed under the [MIT license](https://github.com/oist/topographer/blob/main/LICENSE.md).
+Contribution guidance lives in the repository’s
+[CONTRIBUTING.md](https://github.com/oist/topographer/blob/main/CONTRIBUTING.md).

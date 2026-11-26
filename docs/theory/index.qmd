@@ -1,0 +1,81 @@
+---
+title: "Theory"
+---
+
+# Theory
+
+Topographer starts with inspectable data and records how graph connectivity
+changes under a declared scalar function.
+
+## Raw data and topology definition
+
+Vertex and edge tables are equivalent practical forms of an adjacency matrix:
+they identify vertices, adjacency, and the attributes used in analysis. You may
+declare adjacency directly, or define a neighborhood operator that acts on
+declared vertex attributes. For sequence space, Hamming distance one is one such
+operator.
+
+## Scalar networks
+
+A [`ScalarNetwork`](../../reference/ScalarNetwork.qmd) is a graph with declared
+finite scalar attributes on vertices, edges, or both. The declaration prevents
+an algorithm from silently treating a distance, weight, or biological label as a
+vertex scalar.
+
+## Split trees
+
+A split tree records connected components in descending superlevel sets. Maxima
+create components; split saddles record where components meet. Reduction
+contracts regular chains and leaves critical structure. Join trees are the dual
+ascending lower-level construction.
+
+## Branch spans and persistence
+
+A branch span is the scalar extent of a displayed critical-tree edge. Ordinary
+H0 persistence instead uses the elder rule to pair a finite, losing component
+with the saddle where it dies. Extended H0 persistence adds one global pair for
+the surviving component and the global endpoint. These are complementary, not
+interchangeable, summaries.
+
+## Component persistence and diagram conventions
+
+For a connected scalar network $G$, topographer reports extended component
+persistence in three families, all computed from the join and split trees:
+
+1. **Ordinary persistence**: Sublevel components born at local minima and
+   dying at join saddles during the ascending sweep.
+2. **Relative persistence**: Superlevel components born at local maxima and
+   dying at split saddles during the descending sweep. These pairs encode
+   superlevel component connectivity, not ordinary graph loops, and carry
+   `homology_dimension` 1 in the table because they arise in the relative phase
+   of extended persistence.
+3. **Extended positive persistence**: Exactly one global connected component
+   spanning the global minimum to the global maximum.
+
+Persistence of cycles is not computed.
+
+### Coordinate convention and visual semantics
+
+Topographer adopts a level-set sweep coordinate convention in its persistence
+diagrams:
+
+- **Vertical axis ($Y$) = Birth scalar**: Preserves the physical and biological
+  mental model of sweeping a horizontal level-set plane vertically upward across
+  the scalar network.
+- **Horizontal axis ($X$) = Death scalar**: Evaluated relative to the diagonal
+  reference line $Y = X$.
+- **Above the diagonal ($Y > X$)**: Features with $\text{birth} > \text{death}$,
+  the relative superlevel component merges (triangles pointing upward $\vartriangle$).
+- **Below the diagonal ($Y < X$)**: Features with $\text{birth} < \text{death}$,
+  the ordinary sublevel component merges (triangles pointing downward
+  $\triangledown$ to local minima) and the global component (diamond $\lozenge$
+  pointing to the global maximum).
+
+## Simplification
+
+Simplification uses an ordinary-persistence threshold to remove finite losing
+branches. The global extended pair remains. A branch-span threshold is a
+separate display decision, not persistence pruning.
+
+The [Gallery](../gallery/index.qmd) shows this workflow on 3D and 4D Hamming
+graphs.

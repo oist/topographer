@@ -1,0 +1,108 @@
+[project]
+name = "topographer"
+version = "0.5.0"
+description = "Merge trees and persistence for scalar networks."
+authors = [
+  { name = "Igors Dubanevics" },
+]
+license = "MIT"
+readme = "README.md"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+]
+keywords = ["graph", "network", "scientific-computing", "topological-data-analysis"]
+requires-python = ">=3.11,<4.0"
+dependencies = [
+  "numpy>=1.20",
+  "rustworkx>=0.17.1",
+  "polars>=1.0",
+  "scipy>=1.10",
+]
+
+[project.urls]
+Documentation = "https://github.com/oist/topographer"
+Repository = "https://github.com/oist/topographer"
+Issues = "https://github.com/oist/topographer/issues"
+Changelog = "https://github.com/oist/topographer/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+networkx = [
+  "networkx>=3.0",
+]
+igraph = [
+  "igraph>=0.11",
+]
+interop = [
+  "networkx>=3.0",
+  "igraph>=0.11",
+]
+plotting = [
+  "altair>=6.3.0",
+  "iplotx>=1.8",
+  "matplotlib>=3.11.2",
+  "vl-convert-python>=1.9.0.post1",
+]
+dev = [
+  "gudhi>=3.8",
+  "hypothesis>=6.0",
+  "marimo>=0.25.2",
+  "pytest>=9.2.0",
+  "pytest-cov>=7.0",
+  "ruff>=0.15.21,<0.16",
+]
+docs = [
+  "altair>=6.3.0",
+  "great-docs[marimo]>=0.17",
+  "iplotx>=1.8",
+  "matplotlib>=3.11.2",
+  "vl-convert-python>=1.9.0.post1",
+]
+
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=77"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["topographer*"]
+exclude = ["*.tests"]
+
+
+[tool.ruff]
+line-length = 99
+src = ["src", "tests"]
+include = ["pyproject.toml", "src/**/*.py", "tests/**/*.py"]
+
+[tool.ruff.lint]
+extend-select = ["I"]  # Add import sorting
+
+[tool.ruff.lint.isort]
+known-first-party = ["topographer"]
+force-sort-within-sections = true
+
+[tool.marimo.runtime]
+watcher_on_save = "autorun"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+doctest_optionflags = "ELLIPSIS"
+markers = [
+    "slow: marks tests as slow (notebook execution and long end-to-end workflows)",
+    "examples: marks example workflows and datasets",
+]
+
+

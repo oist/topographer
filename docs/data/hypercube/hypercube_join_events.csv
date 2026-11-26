@@ -1,0 +1,5 @@
+tree_node_index,event,display_event,scalar
+0,minimum,minimum,0.058823529411764705
+1,minimum,minimum,0.47058823529411764
+2,join_saddle,join_saddle,0.75
+3,regular,maximum,0.9411764705882353

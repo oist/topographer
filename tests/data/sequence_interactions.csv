@@ -1,0 +1,4 @@
+source,target,mutation_cost,confidence
+AAA,AAT,1.0,0.90
+AAT,ATA,1.0,0.75
+AAA,ATA,2.0,0.40

@@ -1,0 +1,146 @@
+---
+title: "Bootstrap persistence band"
+---
+
+The bootstrap persistence band (Fasy et al. 2014) turns the standard errors of a scalar network into a **bootstrapped persistence threshold**. Peaks whose ordinary H0 persistence does not exceed the threshold are absorbed into a **band-simplified tree**. The examples below run on the synthetic 4-dimensional hypercube with a synthetic, constant standard error `se`.
+
+## Build a network with standard errors
+
+```python
+import polars as pl
+from topographer.biology import Alphabet
+from topographer.examples import hypercube_node_table
+from topographer.graph import HammingGraph, ScalarNetwork
+
+nodes = hypercube_node_table().with_columns(se=pl.lit(0.02))
+graph = HammingGraph(
+    nodes,
+    sequence_col="sequence",
+    alphabet=Alphabet("01"),
+    hamming_radius=1,
+    vertex_attribute_cols=("scalar", "se"),
+)
+network = ScalarNetwork(graph, scalar_attr="scalar")
+```
+
+## Compute the band
+
+```python
+from topographer.statistics import bootstrap_persistence_band
+
+band = bootstrap_persistence_band(
+    network,
+    filtration="superlevel",
+    n_draws=50,
+    seed=1,
+    quantile=0.95,
+    se_attr="se",
+)
+assert band.threshold == 2 * band.radius
+```
+
+Each **bootstrap draw** replaces every vertex scalar by a sample from `Normal(scalar, se)` on the fixed graph. For each draw the procedure then:
+
+1. builds the draw's H0 persistence diagram: the ordinary pairs plus the essential pair, capped at the opposite global extremum;
+2. measures the bottleneck distance between that diagram and the nominal diagram;
+3. takes the `quantile` quantile of the distances over all draws as the **radius** `c`;
+4. sets the **bootstrapped persistence threshold** to `2c`.
+
+The **bootstrap persistence band** is the diagonal strip of height `2c` in the persistence diagram. A peak survives if and only if its ordinary H0 persistence is greater than `2c`. Pass the threshold to `simplify` to obtain the band-simplified tree:
+
+```python
+from topographer.topology import ScalarNetworkTopology
+
+topology = ScalarNetworkTopology(network)
+tree = topology.split_tree()
+simplified = tree.simplify(band.threshold)
+assert simplified.persistence().height < tree.persistence().height
+```
+
+Use `filtration="superlevel"` with the split tree (peaks) and `"sublevel"` with the join tree (valleys).
+
+## Chunked runs
+
+For a long run, split the draws into chunks, save each one, and combine them later. Draw `d` depends only on the seed and `d`, so any partition of the draws, run in any order or process, combines to the same band as a single call.
+
+```python
+import tempfile
+from pathlib import Path
+
+from topographer.statistics import BottleneckToNominal, bootstrap
+
+statistic = BottleneckToNominal("superlevel", se_attr="se").prepare(network)
+
+with tempfile.TemporaryDirectory() as folder:
+    paths = []
+    for index, draws in enumerate([range(0, 25), range(25, 50)]):
+        chunk = bootstrap.run(network, statistic, n_draws=50, seed=1, draws=draws)
+        path = Path(folder) / f"chunk-{index}.npz"
+        chunk.save(path)
+        paths.append(path)
+    chunks = [bootstrap.BootstrapChunk.load(path) for path in paths]
+
+combined = bootstrap.combine(chunks, statistic, quantile=0.95)
+assert combined == band
+```
+
+The quantile is applied only in `combine`, so saved chunks can be combined again at another quantile.
+
+## Limits
+
+- Draws assume independent Gaussian noise with the given standard errors on every vertex.
+- The band is a bootstrap approximation. It reflects scalar perturbations on a fixed graph only and is not an exact coverage guarantee. It does not provide calibrated peak-level coverage or a false-discovery rate.
+- It omits uncertainty from graph construction, from thresholds and from the estimation of the standard errors.
+- A workspace holds one band. `set_band` refuses to replace it.
+- If every standard error is zero, the radius is 0 and `simplify(0)` raises `ValueError`, because the persistence threshold must be positive.
+- The per-draw diagram is H0 only.
+
+```python
+import pytest
+
+with pytest.raises(ValueError):
+    tree.simplify(0.0)
+```
+
+## Save and read a workspace
+
+A **workspace** holds one scalar network, its merge trees and the band. `write` stores the network, the merge trees computed so far and the band in a new folder. `read` restores them without recomputation.
+
+```python
+topology.set_band(band)
+
+with tempfile.TemporaryDirectory() as folder:
+    target = Path(folder) / "workspace"
+    topology.write(target)
+
+    restored = ScalarNetworkTopology.read(target)
+    assert restored.band == band
+    assert restored.split_tree().persistence().equals(tree.persistence())
+
+    with pytest.raises(FileExistsError):
+        topology.write(target)
+```
+
+`write` never overwrites: it raises `FileExistsError` when the folder exists. `set_band` checks that the band was computed for the same network and raises `ValueError` if a band is already attached.
+
+A workspace of a fitness landscape is read with `FitnessLandscapeTopology.read`, which restores the `FitnessLandscape` network and the subclass:
+
+```python
+from topographer.biology import FitnessLandscape, FitnessLandscapeTopology
+
+landscape = FitnessLandscape(graph, scalar_attr="scalar")
+landscape_topology = FitnessLandscapeTopology(landscape)
+landscape_topology.split_tree()
+
+with tempfile.TemporaryDirectory() as folder:
+    target = Path(folder) / "landscape"
+    landscape_topology.write(target)
+    again = FitnessLandscapeTopology.read(target)
+
+assert isinstance(again, FitnessLandscapeTopology)
+assert isinstance(again.network, FitnessLandscape)
+```
+
+## Reference
+
+Fasy, B. T., Lecci, F., Rinaldo, A., Wasserman, L., Balakrishnan, S. and Singh, A. (2014), "Confidence sets for persistence diagrams", *Annals of Statistics* 42(6).

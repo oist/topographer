@@ -1,0 +1,20 @@
+{
+  "title": "Topographer",
+  "description": "Merge trees and persistence for scalar networks.",
+  "upload_type": "software",
+  "license": "MIT",
+  "version": "0.5.0",
+  "keywords": [
+    "graph",
+    "network",
+    "scientific-computing",
+    "topological-data-analysis"
+  ],
+  "creators": [
+    {
+      "name": "Dubanevics, Igors",
+      "affiliation": "Okinawa Institute of Science and Technology (OIST)",
+      "orcid": "0000-0002-9989-6649"
+    }
+  ]
+}

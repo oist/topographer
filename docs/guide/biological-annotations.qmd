@@ -1,0 +1,56 @@
+---
+title: "Biological annotations and chart composition"
+---
+
+Stop-codon annotations describe sequences; they do not change a vertex's topological event. A sequence contributes once whether it contains one or several stop codons.
+
+```python
+import polars as pl
+from topographer.biology import annotate_stop_codons, has_stop_codon
+
+sequences = pl.DataFrame({
+    "vertex_id": ["sequence-a", "sequence-b", "sequence-c"],
+    "aa_sequence": ["ADL", "A%L", "*^L"],
+})
+annotated = annotate_stop_codons(sequences)
+assert annotated["has_stop_codon"].to_list() == [False, True, True]
+assert has_stop_codon("A&L")
+```
+
+`*` denotes a generic stop; `%`, `^`, and `&` encode the resolved `TAA`, `TAG`, and `TGA` states. Detection uses amino-acid strings. Translate DNA with the appropriate biological alphabet before annotating.
+
+Use cumulative lineage counts to describe a filtration component and local branch counts to describe regular sequences displayed on one branch. These quantities have different memberships and should be labeled separately.
+
+Plotting functions return individual Altair charts. Compose panels using `alt.hconcat(...)`; configure common domains and shared scales where the axes represent the same quantity. Concatenation alone does not create shared hover or selection behavior. Backend names are absent from plotting function names, and retired combined plotters have no aliases.
+
+Fitness distributions are shown as counts in equal-width bins over each population's observed range. Independently binned populations can share explicit fitness and count display domains when comparing panels.
+
+For a `ScalarNetwork` and its `MergeTree`, build plot data with both objects so regular vertices can be located through the tree mapping. Pass filtered annotation rows by public identity:
+
+```python
+from topographer.biology import build_tree_lineage_metrics
+from topographer.plotting import (
+    TreeAnnotationLayer, TreeMarkerConfig, TreePresentationConfig,
+    make_tree_layout, plot_tree, plot_persistence,
+)
+
+metrics = build_tree_lineage_metrics(network, tree)
+plot_data = make_tree_layout(tree, network=network)
+stops = annotated.filter(pl.col("has_stop_codon"))
+presentation = TreePresentationConfig(
+    mode="annotation",
+    annotation_layers=(
+        TreeAnnotationLayer(stops, TreeMarkerConfig(shape="cross")),
+    ),
+)
+tree_chart = plot_tree(plot_data, presentation=presentation)
+persistence_chart = plot_persistence(
+    metrics.persistence_table, annotation_table=stops,
+)
+```
+
+Here `annotated` must describe vertices of `network`, using the `vertex_id` column. Regular annotations retain their exact fitness; critical annotations retain their exact tree positions. `TreePlotConfig(annotation_overlap_step=...)` optionally separates coincident regular markers horizontally. Explicit `x`/`y` annotation tables remain supported for application-authored placements.
+
+`build_tree_lineage_metrics(network, tree)` returns inspectable branch, critical-node, and persistence tables. Branch rows include endpoint identities and both local member counts and cumulative lineage counts. Persistence rows use the losing component immediately before its saddle for ordinary pairs and the full root component for extended pairs. The current sequence-metric calculation requires aligned DNA and amino-acid attributes; column names are configurable.
+
+Summary plotters match annotation identities to pair extrema. `plot_branch_spans` additionally annotates a matching target endpoint on the diagonal; this includes stop-bearing saddles. Vertices absent from a summary remain visible in the tree, but do not acquire a fabricated summary position.

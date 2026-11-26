@@ -1,0 +1,3 @@
+birth_tree_node_index,death_tree_node_index,birth_vertex_index,death_vertex_index,birth_label,death_label,birth_scalar,death_scalar,persistence,birth_event,death_event,pair_kind
+0,3,0,14,0000,1110,0.058823529411764705,0.9411764705882353,0.8823529411764706,minimum,regular,extended
+1,2,15,7,1111,0111,0.47058823529411764,0.75,0.27941176470588236,minimum,join_saddle,ordinary

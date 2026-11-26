@@ -1,0 +1,7 @@
+---
+title: "Biological annotations"
+---
+
+# Biological annotations
+
+This guide has moved to the [User guide](../guide/biological-annotations.qmd).

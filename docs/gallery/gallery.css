@@ -1,0 +1,9 @@
+.quarto-grid-item .thumbnail-image.card-img {
+  aspect-ratio: 1 / 1;
+  height: auto !important;
+  object-fit: cover;
+}
+
+.quarto-grid-item .card {
+  height: 100%;
+}

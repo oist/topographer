@@ -1,0 +1,5 @@
+tree_node_index,event,display_event,scalar
+0,minimum,minimum,0.0
+1,minimum,minimum,0.1
+2,join_saddle,join_saddle,0.5
+3,regular,maximum,1.0

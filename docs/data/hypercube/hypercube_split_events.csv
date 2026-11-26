@@ -1,0 +1,9 @@
+tree_node_index,event,display_event,scalar
+0,maximum,maximum,0.9411764705882353
+1,maximum,maximum,0.8823529411764706
+2,split_saddle,split_saddle,0.8235294117647058
+3,maximum,maximum,0.7647058823529411
+4,maximum,maximum,0.75
+5,split_saddle,split_saddle,0.7058823529411765
+6,split_saddle,split_saddle,0.47058823529411764
+7,regular,minimum,0.058823529411764705

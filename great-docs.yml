@@ -1,0 +1,65 @@
+display_name: Topographer
+parser: numpy
+dynamic: true
+github_style: icon
+repo: https://github.com/oist/topographer
+site_url: https://oist.github.io/topographer/
+pypi: false
+navbar_style: mint
+navbar_order: [Get started, User guide, Gallery, Theory, Reference, About]
+
+authors:
+  - name: Igors Dubanevics
+    role: Author
+    affiliation: OIST
+    github: igorsdub
+    orcid: 0000-0002-9989-6649
+
+source:
+  enabled: true
+  branch: main
+  placement: usage
+
+site:
+  theme: flatly
+  show_dates: true
+  show_author: true
+  toc: true
+  toc-depth: 2
+  toc-title: On this page
+
+jupyter: python3
+marimo: true
+changelog:
+  enabled: true
+
+sections:
+  - title: Get started
+    dir: docs/get-started
+  - title: User guide
+    dir: docs/guide
+  - title: Gallery
+    dir: docs/gallery
+  - title: Theory
+    dir: docs/theory
+  - title: Reference
+    dir: docs/reference
+  - title: About
+    dir: docs/about
+
+reference:
+  title: Reference
+  desc: Public graph, topology, biological landscape, statistics, and plotting APIs.
+  sections:
+    - title: Graphs and scalar networks
+      contents: [Graph, HammingGraph, MergeTree, MergeTreeMapping, PersistenceResult, ScalarNetwork, ScalarNetworkTopology, SequenceGraph]
+    - title: Topology
+      contents: [topology.BootstrapPersistenceBand, topology.TreeMetrics, topology.build_join_tree, topology.build_split_tree, topology.build_tree_location_tables, topology.build_tree_metrics, topology.compute_topological_summary, topology.diagram_bottleneck_distance, topology.diagram_wasserstein_distance, topology.reduce_merge_tree]
+    - title: Biological landscapes
+      contents: [biology.AMINO_ACIDS_20, biology.AMINO_ACIDS_21, biology.AMINO_ACIDS_23, biology.Alphabet, biology.TreeLineageMetrics, biology.DNA_ALPHABET, biology.FitnessLandscape, biology.FitnessLandscapeTopology, biology.RNA_ALPHABET, biology.annotate_stop_codons, biology.build_tree_lineage_metrics, biology.has_stop_codon, biology.parse_vertex_chain_json, biology.roughness_to_slope_ratio, biology.sign_epistasis_fraction, biology.wildtype_accessibility_fraction]
+    - title: Statistics
+      contents: [statistics.BottleneckToNominal, statistics.bootstrap_persistence_band, statistics.compute_bh_qvalues, statistics.validate_se_attr]
+    - title: Bootstrap
+      contents: [statistics.bootstrap.BootstrapChunk, statistics.bootstrap.DrawStatistic, statistics.bootstrap.DrawnNetwork, statistics.bootstrap.combine, statistics.bootstrap.fingerprint, statistics.bootstrap.run]
+    - title: Plotting
+      contents: [plotting.ColorScaleConfig, plotting.PersistencePlotConfig, plotting.ReferenceLineConfig, plotting.TreeAnnotationLayer, plotting.TreeMarkerConfig, plotting.TreePlotConfig, plotting.TreePlotData, plotting.TreePresentationConfig, plotting.build_scalar_plot_domain, plotting.build_tree_plot_data, plotting.compute_branch_local_swarm, plotting.compute_fitness_histogram_table, plotting.count_color_scale, plotting.make_tree_layout, plotting.plot_branch_span, plotting.plot_branch_spans, plotting.plot_extended_persistence, plotting.plot_fitness_histogram, plotting.plot_ordinary_persistence, plotting.plot_persistence, plotting.plot_tree, plotting.relayout_tree_plot_data, plotting.select_tree_root_node_index]

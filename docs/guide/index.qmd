@@ -1,0 +1,20 @@
+---
+title: "User guide"
+---
+
+# User guide
+
+For H0 persistence in a chosen filtration, use
+`ScalarNetworkTopology.persistence_diagram("sublevel")` or
+`persistence_diagram("superlevel")`. The optional `include_essential="null"`
+represents the surviving component with NaN death and infinite persistence;
+the default caps its death at the opposite global extremum.
+
+## Filtration API migration
+
+Merge trees are selected by filtration: `compute_merge_tree("sublevel")` gives
+the join tree and `compute_merge_tree("superlevel")` the split tree. Ties break
+by vertex index (`tie_break="vertex_index"`). Results are cached.
+
+- [Biological annotations](biological-annotations.qmd)
+- [Bootstrap persistence band](bootstrap-persistence-band.qmd)
